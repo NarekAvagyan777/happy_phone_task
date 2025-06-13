@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+@layer utilities {
+  .mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@layer base {
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--color-gray-400);
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.taskItem[draggable="true"] {
+  cursor: grab;
+}
+
+.taskItem[draggable="true"]:active {
+  cursor: grabbing;
+}
