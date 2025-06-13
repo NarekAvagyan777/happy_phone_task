@@ -1,36 +1,86 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ToDo Board
 
-## Getting Started
+**ToDo Board** — это одностраничное SPA-приложение для управления задачами, разработанное с использованием **Next.js (App Router)**, **TypeScript** и **Tailwind CSS**.
 
-First, run the development server:
+Приложение предоставляет простой и удобный интерфейс для работы с задачами, поддерживая два представления: в виде списка и в формате канбан-доски. Все данные хранятся в `localStorage`, поэтому сохраняются между перезагрузками страницы.
+
+## ✨ Функциональность
+
+- 📋 **Список задач**
+  - Отображение задач вертикально
+  - Сортировка по дате создания, алфавиту и статусу
+
+- 📦 **Канбан-доска**
+  - Задачи разбиты по категориям (колонкам)
+  - Drag-and-drop между категориями и внутри одной колонки
+
+- 🔍 **Фильтрация и сортировка**
+  - Фильтрация задач по статусу и категории
+  - Гибкая сортировка в списковом представлении
+
+- 📝 **Управление задачами**
+  - Создание, редактирование, удаление задач
+  - Назначение категории и статуса
+  - Страница редактирования: `/task/[id]`
+
+- 🗂️ **Управление категориями**
+  - Создание и удаление пользовательских категорий
+  - Привязка задач к категориям
+  - Отображение категорий в канбане
+
+- ⚙️ **Общие возможности**
+  - Кастомные модальные окна (не `alert/confirm`)
+  - Drag-and-drop реализован **без сторонних библиотек**
+  - Адаптивный интерфейс для десктопа и мобильных устройств
+  - Нативная валидация форм (`<input required />`) без навязчивых error-сообщений
+
+## 🛠️ Технологии
+
+- [Next.js 15 (App Router)](https://nextjs.org/)
+- [React 19](https://reactjs.org/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Tailwind CSS 4](https://tailwindcss.com/)
+- Без UI-библиотек (все компоненты и стили реализованы вручную)
+
+## 📦 Установка и запуск
 
 ```bash
+# Установка зависимостей
+npm install
+
+# Запуск в режиме разработки
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Сборка production-версии
+npm run build
+
+# Запуск production-сборки
+npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📁 Структура проекта
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+src/
+├── app/
+│   ├── task/[id]/               # Страница редактирования задачи
+│   │   └── page.tsx
+│   ├── favicon.ico
+│   ├── globals.css             # Общие стили
+│   ├── layout.tsx              # Layout для всего приложения
+│   └── page.tsx                # Главная страница со списком и канбаном
+├── components/                 # Переиспользуемые компоненты интерфейса
+│   ├── AddCategoryForm.tsx
+│   ├── AddTaskForm.tsx
+│   ├── KanbanView.tsx
+│   ├── ListView.tsx
+│   ├── Modal.tsx               # Кастомное модальное окно
+│   └── ViewSwitcher.tsx        # Переключатель между представлениями
+├── constants/                  # Константы и перечисления
+│   └── index.ts
+├── types/                      # Типы TypeScript
+│   └── index.ts
+└── utils/                      # Утилиты: сортировка, фильтрация и др.
+    ├── filter.ts
+    └── sort.ts
+```
