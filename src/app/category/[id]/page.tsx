@@ -1,24 +1,21 @@
 "use client";
 
+import { ChangeEvent, useEffect, useState } from "react";
 import { Modal } from "@/components/Modal";
-import { taskStatusOptions } from "@/constants";
-import { Category, Task, TaskStatus } from "@/types";
+import { Category, Task } from "@/types";
 import { useParams, useRouter } from "next/navigation";
-import { ChangeEvent, useEffect, useMemo, useState } from "react";
 
-export default function EditTaskPage() {
+export default function EditCategoryPage() {
   const params = useParams();
   const router = useRouter();
   const { id } = params;
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [categories, setCategories] = useState<Array<Category>>([]);
+  const [tasks, setTasks] = useState<Array<Task>>([]);
 
-  const [task, setTask] = useState<Task>({
-    categoryId: "",
-    createdAt: "",
+  const [category, setCategory] = useState<Category>({
     id: "",
-    status: "" as TaskStatus,
     title: "",
   });
 
@@ -32,26 +29,17 @@ export default function EditTaskPage() {
 
   const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newTitle = e.target.value;
-    if (errors.title) {
+    setCategory((prev) => ({ ...prev, title: newTitle }));
+
+    if (errors?.title) {
       setErrors({ title: null });
     }
-    setTask((prev) => ({ ...prev, title: newTitle }));
-  };
-
-  const handleStatusChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    const newStatus = e.target.value as TaskStatus;
-    setTask((prev) => ({ ...prev, status: newStatus }));
-  };
-
-  const handleCategoryChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    const newCategoryId = e.target.value;
-    setTask((prev) => ({ ...prev, categoryId: newCategoryId }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    let trimmed = task.title.trim();
+    let trimmed = category.title.trim();
 
     if (trimmed.length < 4) {
       setErrors({
@@ -61,36 +49,37 @@ export default function EditTaskPage() {
       return;
     }
 
-    const savedTasks: Task[] = JSON.parse(
-      localStorage.getItem("tasks") || "[]"
-    );
+    const found = categories.find((cat) => cat.title === trimmed);
 
-    const newTasks = savedTasks.map((current) => {
-      return current.id === id ? { ...task, title: trimmed } : current;
+    if (found) {
+      setErrors({ title: "Категория с таким названием уже существует" });
+      return;
+    }
+
+    const newCategories = categories.map((current) => {
+      return current.id === id ? { ...category, title: trimmed } : current;
     });
 
-    localStorage.setItem("tasks", JSON.stringify(newTasks));
+    localStorage.setItem("categories", JSON.stringify(newCategories));
     router.push("/");
   };
 
   const deleteItem = () => {
-    const savedTasks: Task[] = JSON.parse(
-      localStorage.getItem("tasks") || "[]"
-    );
-
-    const filtered = savedTasks.filter((current) => {
+    const filteredCategories = categories.filter((current) => {
       return current.id !== id;
     });
 
+    const filteredTasks = tasks.filter(
+      (task) => task.categoryId !== category.id
+    );
+
     toggleModal();
 
-    localStorage.setItem("tasks", JSON.stringify(filtered));
+    localStorage.setItem("categories", JSON.stringify(filteredCategories));
+    localStorage.setItem("tasks", JSON.stringify(filteredTasks));
+
     router.push("/");
   };
-
-  const memoizedCategories = useMemo(() => {
-    return Object.entries(categories);
-  }, [categories]);
 
   useEffect(() => {
     const savedTasks = JSON.parse(localStorage.getItem("tasks") || "[]");
@@ -98,10 +87,13 @@ export default function EditTaskPage() {
       localStorage.getItem("categories") || "[]"
     );
 
-    const foundTask = savedTasks.find((el: Task) => el.id === id);
+    const foundCategory = savedCategories.find(
+      (el: Category) => el.id === id
+    ) as Category;
 
+    setTasks(savedTasks);
     setCategories(savedCategories);
-    setTask(foundTask);
+    setCategory(foundCategory);
   }, []);
 
   return (
@@ -109,7 +101,7 @@ export default function EditTaskPage() {
       <Modal
         isOpen={isModalOpen}
         onClose={toggleModal}
-        title="Удалить задачу ?"
+        title={`Удалить категорию вместе с его задачами ?`}
       >
         <div>
           <div className="flex justify-end gap-2">
@@ -131,7 +123,9 @@ export default function EditTaskPage() {
         </div>
       </Modal>
 
-      <h1 className="text-2xl md:text-4xl break-all">Редактировать задачу</h1>
+      <h1 className="text-2xl md:text-4xl break-all">
+        Редактировать категорию
+      </h1>
 
       <form onSubmit={handleSubmit} className="mt-4">
         <label htmlFor="title" className="block mb-2">
@@ -141,47 +135,13 @@ export default function EditTaskPage() {
         <input
           required
           id="title"
-          placeholder="Введите название задачи"
+          placeholder="Введите название категории"
           className="w-full border p-2 rounded mb-4"
-          value={task.title}
+          value={category.title}
           onChange={handleTitleChange}
         />
 
         {errors?.title && <p className="text-red-500 mt-1">{errors.title}</p>}
-
-        <label htmlFor="status" className="block mb-2">
-          Статус
-        </label>
-        <select
-          required
-          id="status"
-          className="w-full border p-2 rounded mb-4"
-          value={task.status}
-          onChange={handleStatusChange}
-        >
-          {taskStatusOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-
-        <label htmlFor="category" className="block mb-2">
-          Категория
-        </label>
-        <select
-          required
-          id="category"
-          className="w-full border p-2 rounded mb-4"
-          value={task.categoryId}
-          onChange={handleCategoryChange}
-        >
-          {memoizedCategories.map((cat) => (
-            <option key={cat[1].id} value={cat[1].id}>
-              {cat[1].title}
-            </option>
-          ))}
-        </select>
 
         <div className="flex flex-wrap max-[360px]:justify-start justify-end gap-2">
           <button

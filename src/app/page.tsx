@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { AddCategoryForm } from "@/components/AddCategoryForm";
 import { AddTaskForm } from "@/components/AddTaskForm";
 import { KanbanView } from "@/components/KanbanView";
@@ -7,7 +8,6 @@ import { ListView } from "@/components/ListView";
 import { Modal } from "@/components/Modal";
 import { ViewSwitcher } from "@/components/ViewSwitcher";
 import { Category, Task } from "@/types";
-import { useEffect, useState } from "react";
 
 export default function Home() {
   const [selectedView, setSelectedView] = useState<"list" | "kanban">("list");
@@ -85,7 +85,10 @@ export default function Home() {
         }
       >
         {visibleForm === "category" && (
-          <AddCategoryForm onCreate={handleCategoryCreate} categories={categories} />
+          <AddCategoryForm
+            onCreate={handleCategoryCreate}
+            categories={categories}
+          />
         )}
         {visibleForm === "task" && (
           <AddTaskForm onCreate={handleTaskCreate} categories={categories} />

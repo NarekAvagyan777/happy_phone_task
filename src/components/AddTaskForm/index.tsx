@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useMemo, ChangeEvent } from "react";
-import { TaskStatus, Category, Task } from "@/types";
 import { taskStatusOptions } from "@/constants";
+import { Category, Task, TaskStatus } from "@/types";
+import { ChangeEvent, useState } from "react";
 
 type Props = {
   categories: Array<Category>;
@@ -11,10 +11,22 @@ type Props = {
 
 export const AddTaskForm = ({ categories, onCreate }: Props) => {
   const [title, setTitle] = useState("");
-  const [status, setStatus] = useState<TaskStatus>("todo");
+  const [status, setStatus] = useState<TaskStatus>("Незавершённый");
   const [categoryId, setCategoryId] = useState<string>(
     categories.length ? categories[0].id : ""
   );
+
+  const [errors, setErrors] = useState<Record<"title", string | null>>({
+    title: null,
+  });
+
+  const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
+
+    if (errors.title) {
+      setErrors({ title: null });
+    }
+  };
 
   const handleStatusChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setStatus(e.target.value as TaskStatus);
@@ -27,11 +39,19 @@ export const AddTaskForm = ({ categories, onCreate }: Props) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!title.trim()) return;
+    let trimmed = title.trim();
+
+    if (trimmed.length < 4) {
+      setErrors({
+        title: "Минимальная длина заголовка - 4 символа",
+      });
+
+      return;
+    }
 
     const newTask: Task = {
       id: Date.now().toString(),
-      title: title.trim(),
+      title: trimmed,
       status,
       categoryId,
       createdAt: new Date().toISOString(),
@@ -46,11 +66,12 @@ export const AddTaskForm = ({ categories, onCreate }: Props) => {
       <input
         required
         placeholder="Введите название задачи"
-        className="w-full border p-2 rounded mb-4"
+        className="w-full border p-2 rounded"
         value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        pattern=".*[^ ]{4,}.*"
+        onChange={handleTitleChange}
       />
+
+      {errors.title && <p className="text-red-500 mt-1 mb-4">{errors.title}</p>}
 
       <label className="block mb-2">Статус</label>
       <select
@@ -114,7 +135,7 @@ export const AddTaskForm = ({ categories, onCreate }: Props) => {
       </div>
     </form>
   ) : (
-    <h2 className="text-xl font-semibold mb-4">
+    <h2 className="text-xl text-red-400 font-semibold mb-4">
       Для начала создайте категорию
     </h2>
   );

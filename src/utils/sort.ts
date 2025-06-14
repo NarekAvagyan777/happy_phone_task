@@ -14,9 +14,9 @@ export function sortTasks(
       return [...tasks].sort((a, b) => a.title.localeCompare(b.title));
     case "status":
       const statusOrder: Record<TaskStatus, number> = {
-        todo: 0,
-        "in process": 1,
-        done: 2,
+        Незавершённый: 0,
+        "В процессе": 1,
+        Завершённый: 2,
       };
       return [...tasks].sort(
         (a, b) => (statusOrder[a.status] ?? 99) - (statusOrder[b.status] ?? 99)

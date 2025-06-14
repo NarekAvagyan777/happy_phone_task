@@ -8,27 +8,39 @@ type Props = {
 
 export const AddCategoryForm = ({ onCreate, categories }: Props) => {
   const [title, setTitle] = useState<string>("");
-  const [error, setError] = useState<string | null>();
+  const [errors, setErrors] = useState<Record<"title", string | null>>({
+    title: null,
+  });
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
 
-    if (error) {
-      setError(null);
+    if (errors.title) {
+      setErrors({ title: null });
     }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const found = categories.find((cat) => cat.title === title);
+    let trimmed = title.trim();
 
-    if (found) {
-      setError("Категория с таким названием уже существует");
+    if (trimmed.length < 4) {
+      setErrors({
+        title: "Минимальная длина заголовка - 4 символа",
+      });
+
       return;
     }
 
-    onCreate({ title, id: Date.now().toString() });
+    const found = categories.find((cat) => cat.title === trimmed);
+
+    if (found) {
+      setErrors({ title: "Категория с таким названием уже существует" });
+      return;
+    }
+
+    onCreate({ title: trimmed, id: Date.now().toString() });
   };
 
   return (
@@ -42,9 +54,8 @@ export const AddCategoryForm = ({ onCreate, categories }: Props) => {
           value={title}
           placeholder="Введите название категории"
           className="border border-gray-300 p-2 rounded w-full"
-          pattern=".*[^ ]{4,}.*"
         />
-        {error && <p className="text-red-500 mt-1">{error}</p>}
+        {errors?.title && <p className="text-red-500 mt-1">{errors.title}</p>}
       </div>
 
       <div className="flex justify-end gap-2">

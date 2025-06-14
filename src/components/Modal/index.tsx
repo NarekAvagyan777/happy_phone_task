@@ -51,9 +51,7 @@ export const Modal = ({ isOpen, children, onClose, title = "" }: Props) => {
         </button>
         <div className="w-full relative pr-9 overflow-hidden">
           {title && (
-            <h2 className="text-3xl overflow-hidden text-ellipsis break-all">
-              {title}
-            </h2>
+            <h2 className="text-2xl overflow-hidden text-ellipsis">{title}</h2>
           )}
         </div>
 

@@ -1,8 +1,10 @@
 "use client";
 import { taskStatusOptions } from "@/constants";
+import { Edit } from "@/icons";
 import { Category, Task, TaskStatus } from "@/types";
 import { filterTasks } from "@/utils/filter";
 import { sortTasks } from "@/utils/sort";
+import Link from "next/link";
 import { ChangeEvent, useState } from "react";
 
 type TaskListProps = {
@@ -38,7 +40,7 @@ export const ListView = ({ tasks, categories }: TaskListProps) => {
 
   return (
     <div>
-      <div className="flex items-center gap-x-6 gap-y-5 flex-wrap">
+      <div className="flex items-center gap-x-6 gap-y-5 flex-wrap pb-2 border-b">
         <div className="flex items-center gap-3 mb-2">
           <label htmlFor="sort">Сортировать по:</label>
           <select
@@ -64,7 +66,9 @@ export const ListView = ({ tasks, categories }: TaskListProps) => {
           >
             <option value="all">Все</option>
             {taskStatusOptions.map((status) => (
-              <option key={status.value} value={status.value}>{status.label}</option>
+              <option key={status.value} value={status.value}>
+                {status.label}
+              </option>
             ))}
           </select>
         </div>
@@ -80,21 +84,31 @@ export const ListView = ({ tasks, categories }: TaskListProps) => {
           >
             <option value="all">Все</option>
             {categories.map((el) => (
-              <option key={el.id} value={el.id}>{el.title}</option>
+              <option key={el.id} value={el.id}>
+                {el.title}
+              </option>
             ))}
           </select>
         </div>
       </div>
 
-      <ul className="space-y-2">
+      <ul className="space-y-2 pt-2">
         {sortedTasks.map((task) => {
           return (
-            <li key={task.id} className="p-4 border rounded shadow-sm">
-              <p className="text-2xl text-ellipsis">{task.title}</p>
-              <p className="text-sm text-gray-600">Статус: {task.status}</p>
-              <p className="text-sm text-gray-400">
-                Создано: {new Date(task.createdAt).toLocaleString()}
-              </p>
+            <li
+              key={task.id}
+              className="p-4 border rounded shadow-sm flex justify-between items-center"
+            >
+              <div className="">
+                <p className="text-2xl text-ellipsis">{task.title}</p>
+                <p className="text-sm text-gray-600">Статус: {task.status}</p>
+                <p className="text-sm text-gray-400">
+                  Создано: {new Date(task.createdAt).toLocaleString()}
+                </p>
+              </div>
+              <Link href={`/task/${task.id}`} className="shrink-0">
+                <Edit />
+              </Link>
             </li>
           );
         })}

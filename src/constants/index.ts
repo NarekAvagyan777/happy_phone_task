@@ -9,7 +9,7 @@ export const taskStatusOptions: Array<{
   value: TaskStatus;
   label: TodoStatusLabel;
 }> = [
-  { value: "todo", label: "Незавершённый" },
-  { value: "in process", label: "В процессе" },
-  { value: "done", label: "Завершённый" },
+  { value: "Незавершённый", label: "Незавершённый" },
+  { value: "В процессе", label: "В процессе" },
+  { value: "Завершённый", label: "Завершённый" },
 ];

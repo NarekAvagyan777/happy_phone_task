@@ -1,4 +1,4 @@
-export type TaskStatus = "todo" | "in process" | "done";
+export type TaskStatus = "Незавершённый" | "В процессе" | "Завершённый";
 export type TodoStatusLabel = "Незавершённый" | "В процессе" | "Завершённый";
 
 export type Task = {

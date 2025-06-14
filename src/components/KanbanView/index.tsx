@@ -1,7 +1,9 @@
 "use client";
-import React, { DragEvent, useEffect, useMemo, useState } from "react";
+import { Edit } from "@/icons";
 import { Category, Task } from "@/types";
 import Link from "next/link";
+import { DragEvent, useEffect, useState } from "react";
+import styles from "./KanbanView.module.css";
 
 type Props = {
   categories: Array<Category>;
@@ -133,7 +135,13 @@ export const KanbanView = ({ categories, tasks, setTasks }: Props) => {
     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5 overflow-auto mt-4">
       {categories.map((cat) => (
         <div key={cat.id}>
-          <h2 className="text-3xl font-bold mb-2">{cat.title}</h2>
+          <div className="flex items-start justify-between">
+            <h2 className="text-3xl font-bold mb-2">{cat.title}</h2>
+
+            <Link href={`/category/${cat.id}`} className="shrink-0">
+              <Edit />
+            </Link>
+          </div>
           <div
             className="flex-shrink-0 bg-gray-50 rounded p-3 py-6 min-h-[150px]"
             onDragOver={dragOverHandler}
@@ -143,7 +151,7 @@ export const KanbanView = ({ categories, tasks, setTasks }: Props) => {
               <div
                 key={task.id}
                 draggable
-                className="taskItem p-2 mb-2 bg-white rounded shadow flex justify-between overflow-hidden break-all"
+                className={`${styles.taskItem} p-2 mb-2 bg-white rounded shadow flex justify-between overflow-hidden break-all`}
                 onDragOver={(e) => dragOverHandler(e)}
                 onDragLeave={(e) => dragLeaveHandler(e)}
                 onDragStart={(e) => dragStartHandler(e, cat, task)}
@@ -158,18 +166,7 @@ export const KanbanView = ({ categories, tasks, setTasks }: Props) => {
                   </div>
 
                   <Link href={`/task/${task.id}`} className="shrink-0">
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M5 20.9996C4.45 20.9996 3.97917 20.8038 3.5875 20.4121C3.19583 20.0204 3 19.5496 3 18.9996V4.99961C3 4.44961 3.19583 3.97878 3.5875 3.58711C3.97917 3.19544 4.45 2.99961 5 2.99961H13.925L11.925 4.99961H5V18.9996H19V12.0496L21 10.0496V18.9996C21 19.5496 20.8042 20.0204 20.4125 20.4121C20.0208 20.8038 19.55 20.9996 19 20.9996H5ZM9 14.9996V10.7496L18.175 1.57461C18.375 1.37461 18.6 1.22461 18.85 1.12461C19.1 1.02461 19.35 0.974609 19.6 0.974609C19.8667 0.974609 20.1208 1.02461 20.3625 1.12461C20.6042 1.22461 20.825 1.37461 21.025 1.57461L22.425 2.99961C22.6083 3.19961 22.75 3.42044 22.85 3.66211C22.95 3.90378 23 4.14961 23 4.39961C23 4.64961 22.9542 4.89544 22.8625 5.13711C22.7708 5.37878 22.625 5.59961 22.425 5.79961L13.25 14.9996H9ZM11 12.9996H12.4L18.2 7.19961L17.5 6.49961L16.775 5.79961L11 11.5746V12.9996Z"
-                        fill={"black"}
-                      />
-                    </svg>
+                    <Edit />
                   </Link>
                 </div>
               </div>

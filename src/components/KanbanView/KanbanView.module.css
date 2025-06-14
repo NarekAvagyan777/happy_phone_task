@@ -1,0 +1,7 @@
+.taskItem[draggable="true"] {
+  cursor: grab;
+}
+
+.taskItem[draggable="true"]:active {
+  cursor: grabbing;
+}
