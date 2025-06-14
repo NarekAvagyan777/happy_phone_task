@@ -85,7 +85,7 @@ export default function Home() {
         }
       >
         {visibleForm === "category" && (
-          <AddCategoryForm onCreate={handleCategoryCreate} />
+          <AddCategoryForm onCreate={handleCategoryCreate} categories={categories} />
         )}
         {visibleForm === "task" && (
           <AddTaskForm onCreate={handleTaskCreate} categories={categories} />

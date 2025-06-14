@@ -116,7 +116,7 @@ export default function EditTaskPage() {
         </div>
       </Modal>
 
-      <h1 className="text-4xl">Редактировать задачу</h1>
+      <h1 className="text-2xl md:text-4xl break-all">Редактировать задачу</h1>
 
       <form onSubmit={handleSubmit} className="mt-4">
         <label htmlFor="title" className="block mb-2">
